@@ -1,28 +1,28 @@
 import pytesseract
 from PIL import ImageGrab
-import win32api
-import pyautogui
-import pyperclip
+from win32api import GetKeyState
+from pyautogui import position
+from pyperclip import copy
 
 pytesseract.pytesseract.tesseract_cmd = f'C:/Program Files/Tesseract-OCR/tesseract.exe'
 
 # Not clicked
-state_left = win32api.GetKeyState(0x01)
+state_left = GetKeyState(0x01)
 print("Ready!")
 while True:
     # Get current state of left mouse button
-    left_click = win32api.GetKeyState(0x01)
+    left_click = GetKeyState(0x01)
     # If left button is clicked
     if left_click != state_left:  
         # Get pos1 of mouse
-        x1, y1 = pyautogui.position()
+        x1, y1 = position()
         # Change state to clicked
         state_left = left_click
         # Loop while left button is held down
         while left_click == state_left:
-            left_click = win32api.GetKeyState(0x01)
+            left_click = GetKeyState(0x01)
         # When left button is released
-        x2, y2 = pyautogui.position()
+        x2, y2 = position()
         # Set state_left to not clicked
         state_left = left_click
 
@@ -37,7 +37,7 @@ while True:
                 # Get text from image
                 try:
                     text = pytesseract.image_to_string(img)
-                    pyperclip.copy(text)
+                    copy(text)
                     print("Copied to clipboard")
                 except Exception as e:
                     print('Error:', e)
